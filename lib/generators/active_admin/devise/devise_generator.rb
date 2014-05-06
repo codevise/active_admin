@@ -7,6 +7,9 @@ module ActiveAdmin
       class_option  :registerable, :type => :boolean, :default => false,
                     :desc => "Should the generated resource be registerable?"
 
+      class_option  :default_user, :type => :boolean, :default => true,
+                    :desc => "Should a default user be created inside the migration?"
+
       def install_devise
         require 'devise'
         if File.exists?(File.join(destination_root, "config", "initializers", "devise.rb"))
@@ -56,7 +59,7 @@ module ActiveAdmin
       def add_default_user_to_migration
         # Don't assume that we have a migration!
         devise_migration_file = Dir["db/migrate/*_devise_create_#{table_name}.rb"].first
-        return if devise_migration_file.nil?
+        return if devise_migration_file.nil? || !options[:default_user]
 
         devise_migration_content = File.read(devise_migration_file)
 
