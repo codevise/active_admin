@@ -34,7 +34,11 @@ module ActiveAdmin
             if active_admin_application.favicon
               text_node(favicon_link_tag(active_admin_application.favicon))
             end
-            
+
+            active_admin_namespace.meta_tags.each do |name, content|
+              text_node(tag(:meta, name: name, content: content))
+            end
+
             text_node csrf_meta_tag
           end
         end
